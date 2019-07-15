@@ -1,2 +1,0 @@
-var myPoint = new Point(10, 20); 
-console.log(myPoint);
