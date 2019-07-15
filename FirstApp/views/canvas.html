@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Load the Paper.js library -->
+<link rel="stylesheet" href="Home.css">
+<link rel="stylesheet" href="/bootstrap.css">
+<script type="text/javascript" src="/paper-full.js"></script>
+<!--<script type="text/javascript" src="/Untitled.js"></script>-->
+<!-- Define inlined PaperScript associate it with myCanvas -->
+<script type="text/paperscript" src="/Untitled.js" canvas="myCanvas">  
+</script>
+</head>
+<body>
+<div class="container">
+	<nav class="navbar navbar-expand-sm bg-dark">
+		<ul class="navbar-nav">
+			<li class="nav-item">
+			<a class="nav-link" href="#">Home</a>
+			</li>
+			<li class="nav-item">
+			<a class="nav-link" href="#">About</a>
+			</li>
+			<li class="nav-item">
+			<a class="nav-link" href="#">Projects</a>
+			</li>
+		</ul>
+	</nav>
+	<div class="jumbotron row">
+		<div class="col-4-lg">
+			<input type="text" name="push" id="push">
+			<button class="btn btn-primary">Push</button>
+			<!-- <input type="text" name="pop" id="pop"> -->
+				
+			<input type="text" name="enqueue" id="enqueue">
+			<button class="btn btn-primary">Enqueue</button>
+			<br>
+			<button class="btn btn-primary">Pop</button>
+			<button class="btn btn-primary">Dequeue</button>
+
+		</div>
+	</div>
+	<div class="row">
+		<!-- <div class="col-6-xlg">
+				<!-- <input type="text" name="dequeue" id="dequeue"> -->
+				<!-- <button class="btn btn-primary">Pop</button>
+				<button class="btn btn-primary">Dequeue</button> -->
+		<!-- </div>  -->
+	</div>
+		
+
+	<div>
+		<canvas id="myCanvas" resize></canvas>
+	</div>
+</div>
+</body>
+</html>
