@@ -5,6 +5,17 @@ function  BTreeNode(t,leaf){
         this.C = new Array(2*this.t);
         this.n = 0;
 
+
+
+        this.draw = function(){
+            var BTnode = new Path.Rectangle(new Point(100,100),[50,100]);
+            for(var i=0;i<this.keys.length;i++){
+                var text = new PointText(new Point(120,120 + i*20));
+                text.content = this.keys[i];
+                text.fillColor = "red";
+            }
+        }
+
     this.traverse= function(){
         var i;
         for(i=0;i<this.n;i++)
@@ -102,6 +113,8 @@ function  BTreeNode(t,leaf){
 
 };
 
+
+//Start of Btree 
 function BTree(t){
         this.root = null;
         this.t = t;
@@ -149,9 +162,31 @@ function BTree(t){
 
     }
 
+    this.remove = function(k){
+        if(!this.root){
+            alert("the Tree is empty\n");
+            return;
+        }
+        this.root.remove(k);
+
+        if(this.root.n ===0){
+            var tmp = root;
+            if(this.root.leaf){
+                this.root = null;
+
+            }
+             else{
+                this.root = this.root.C[0];
+            }
+        return;
+        }
+
+    }
+
+
     
 };
-
+//End of Btree
 
 t= new BTree(3); // A B-Tree with minium degree 3 
 t.insert(10); 
@@ -162,6 +197,7 @@ t.insert(12);
 t.insert(30); 
 t.insert(7); 
 t.insert(17); 
+t.root.draw();
 
 console.log("Traversal of the constucted tree is "); 
 t.traverse(); 

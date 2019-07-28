@@ -2,6 +2,8 @@
 var express = require("express");
 var app = express();
 
+app.use(express.static("public"));
+
 app.set("view engine","ejs");
 
 app.get("/",function(req,res){
@@ -12,6 +14,10 @@ app.get("/",function(req,res){
 app.get("/about",function(req,res){
     res.render("about");
 
+});
+
+app.get("/singlyList",function(req,res){
+    res.render("singlyList");
 });
 app.get("*",function(req,res){
     res.render("error");
