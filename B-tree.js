@@ -4,13 +4,18 @@ function  BTreeNode(t,leaf){
         this.keys =new Array(2*this.t-1);
         this.C = new Array(2*this.t);
         this.n = 0;
+        this.pos =new Point(0,0);
 
 
 
-        this.draw = function(){
-            var BTnode = new Path.Rectangle(new Point(100,100),[50,100]);
-            for(var i=0;i<this.keys.length;i++){
-                var text = new PointText(new Point(120,120 + i*20));
+        this.draw = function(pos){
+            // console.log("drawing at "+ pos);
+            var BTnode = new Path.Rectangle(pos,[50,100]);
+            // BTnode.fillColor= "black";
+            for(var i=0;i<this.keys.length&&this.keys[i]!=undefined;i++){
+                // console.log("here"+ i);
+
+                var text = new PointText(new Point(i*50,100)+this.pos);
                 text.content = this.keys[i];
                 text.fillColor = "red";
             }
@@ -67,7 +72,7 @@ function  BTreeNode(t,leaf){
                 i--;
             }
             if(this.C[i+1].n===2*this.t-1){
-                splitChild(i+1,this.C[i+1]);
+                this.splitChild(i+1,this.C[i+1]);
                 if(this.keys[i+1]<k){
                     i++;
                 }
@@ -140,6 +145,7 @@ function BTree(t){
             this.root = new BTreeNode(this.t,true);
             this.root.keys[0]= k;
             this.root.n=1;
+            this.root.pos = new Point(view.center.x,50);
         }
         else{
             if(this.root.n==2*this.t-1){
@@ -189,21 +195,53 @@ function BTree(t){
 //End of Btree
 
 t= new BTree(3); // A B-Tree with minium degree 3 
-t.insert(10); 
-t.insert(20); 
-t.insert(5); 
-t.insert(6); 
-t.insert(12); 
-t.insert(30); 
-t.insert(7); 
-t.insert(17); 
-t.root.draw();
+var n=0; 
+function reload(){
+    n=0;
+    project.activeLayer.removeChildren();
+    console.log("From reload root",t.root);
+    if(t.root!=null){
+        Draw(t.root);
+    }
+}
 
-console.log("Traversal of the constucted tree is "); 
-t.traverse(); 
+// this.search = function(k){
+//     var i=0;
+//     while(i<this.n && k>this.keys[i]){
+//         i++;
+//     }
+//     if(this.keys[i]==k){
+//         return this;        //flagged
+//     }
+//     if(this.leaf ==true){
+//         return null;
+//     }
+//     return this.C[i].search(k);
+// }
+function Draw(tree){
+    console.log("In Draw n=",n,tree)
+    if(!tree.leaf){
+        tree.draw(new Point(100,n*20));
+        n+=1;
+        for(var i=0;i<tree.n;i++){
+            Draw(tree.C[i]);
+        }
+    }
+    else{
+        tree.draw(new Point(100,n*20));
+        n+=1;
+        }
+}
 
-var k = 6; 
-console.log((t.search(k) != null)? "\nPresent" : "\nNot Present"); 
+var inp = document.querySelector('input');
+inp.addEventListener("keypress",function(event){
+    // console.log(event);
+    if(event.keyCode == 13){
+// console.log("hurah",inp.value);
+        t.insert(parseInt(inp.value));
+        inp.value = parseInt(inp.value)+1;
+        reload();
 
-k = 15; 
-console.log((t.search(k) != null)? "\nPresent" : "\nNot Present"); 
+    }
+
+});
