@@ -14,11 +14,14 @@
 <% include partials/header %>
     <h1>BTree</h1>
     <div class margin-bottom = 30px>
-        <p><span></span>Insert into Btree</p>
-        <input type="number" id="text">
-
-            <canvas id='myCanvas' resize ></canvas>
+        <p><span>Insert into Btree</span></p>
+        <input type="number" id="textInsert">
+        <p><span>Remove from Btree</span></p>
+        <input type="number" id="textRemove">
+            
     </div>
+    <div><canvas id='myCanvas' resize ></canvas></div>
+
    
     <script type = "text/javascript" src="paper-full.js"></script>
     <script type ="text/paperscript" src="B-tree.js" canvas ="myCanvas"></script>
