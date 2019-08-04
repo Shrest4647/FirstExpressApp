@@ -7,40 +7,32 @@ function  BTreeNode(t,leaf){
         this.pos= new Point(view.center.x,50);
 
         this.setPosition = function(pos,depth){
-            var c=1;
-            if(depth==1){
-                pos*=1.25;
-    
-            }
-            // else if(depth==2){
-            //     c=2.75/this.t;
+            // if(this.n>this.t){
+            //     pos*=1.11;
             // }
-            // else if(depth==3){
-            //     c=2.5/this.t;
-            // }
+            
             this.pos= new Point(view.center.x,50)-new Point(this.n*10,0);
-            this.pos+= new Point(pos*4*(this.t)*30*c,depth*60);
+            this.pos+= new Point(pos*4*(this.t)*40,depth*100);
         }
 
 
         this.draw = function(){
             //Finding center of screen
-            var center = this.pos;            
-            if(center.x<0){center.x=0};
+            var center = this.pos; 
+
+
             var BTnode = new Path.Rectangle(center,[(this.n)*35,30]);
             BTnode.strokeColor= "black";
             for(var i=0;i<this.n&&this.keys[i]!=undefined;i++){
                 var textPos =new Point(i*30+10,15)+center;
-                if(textPos.x<0){
-                    textPos.x=20;
-                }
+               
                 var text = new PointText(textPos);
                 text.content = this.keys[i];
                 // console.log("printed ",text.content,"at",new Point(i*20,20)+center);
                 text.fillColor = "blue";
                 if(!this.leaf){
                     var start = textPos +new Point(-10,0);
-                    var end = this.C[i].pos+[this.C[i].n*5,0];
+                    var end = this.C[i].pos+[this.C[i].n*20,0];
                     console.log("child:",end);
                     var path = new Path(start,end);
                     // var arrow = new Path(end-[-10,10],end,end-[10,10]);
@@ -526,17 +518,21 @@ function BTree(t){
     
 };
 //End of Btree
+var degree= prompt("Enter the degree(2,3):");
+var d =document.querySelector('input#defaultdegree');
+if(degree==2){
+    d.click();
+    console.log(1);
+}
+else{
+    document.querySelector('input#nondefaultdegree').click();
+    console.log(2);
+}
 
 
-document.querySelector('input#defaultdegree').click();
-var form = document.querySelectorAll('form');
-console.log(form);
-var choice = form.value;
-console.log(choice);
 
 
-
-t= new BTree(2); // A B-Tree with minium degree 3 
+var t= new BTree(parseInt(degree)); // A B-Tree with minium degree 3 
 // console.log(t);
 posArray = [];
 function reload(){
@@ -550,21 +546,24 @@ function reload(){
 var lastpos;
 function managePos(tree,pos,d){
     var Depth = d;
-    if(posArray.includes([pos,d]||lastpos==pos)){
-        console.log("position repeated");        
+    if(tree.n>tree.t&&tree.t==2){
+        pos*=1.25;
     }
-    // console.log("Beforetree",tree.pos);
     tree.setPosition(pos,d);
-    // console.log("Aftertree",tree.pos);
     if(!tree.leaf){
         for(var i=0;i<=tree.n;i++){
-            // if(pos<0){
-            //     pos*=1.1;
-            // }
-            // else{
-            //     pos*=1.1;
+            if(pos-1<0){
+                pos*=1.11;
+                // console.log(pos);
+            }
+            else if(pos==0){
+                pos=-0.01;
+            }
+            else{
+                pos*=1.11;
+                // console.log(pos);
 
-            // }
+            }
             managePos(tree.C[i],pos+(i-tree.n/2)/Math.pow(2,Depth),Depth+1);
         }
     }
@@ -584,7 +583,7 @@ function Draw(tree){
     }
 
     else{
-        console.log("Found Rock Bottom");
+        // console.log("Found Rock Bottom");
         }
 }
 console.log(document.querySelector('input#defaultdegree').click());
@@ -616,19 +615,44 @@ search.addEventListener("keypress",function(event){
 
     if(event.keyCode == 13){
         if(t.search(parseInt(search.value))){
+            var alert = document.createElement('div');
+            alert.className="alert alert-success";
+            alert.innerHTML = "<strong>Element FOUND</strong>"
+            var jumb = document.querySelector("#instruction");
+            jumb.appendChild(alert);
             setInterval(function(){
-                console.log(view);
+                jumb.removeChild(alert);
+                
                 clearInterval();
 
             },2000)
         }
         else{
-            alert(search.value, "is not present");
+            var alert = document.createElement('div');
+            alert.className="alert alert-warning";
+            alert.innerHTML = "<strong>No such element FOUND</strong>"
+            var jumb = document.querySelector("#instruction");
+            jumb.appendChild(alert);
+            setInterval(function(){
+                jumb.removeChild(alert);
+                clearInterval();
+
+            },5000)
         }
-        // SearchFun(parseInt(search.value));
         search.value = '';
         // reload();
 
     }
 
 });
+
+
+var toolPan = new Tool()
+toolPan.activate()
+
+// On drag, scroll the View by the difference between mousedown 
+// and mouseup
+toolPan.onMouseDrag = function (event) {
+    var delta = event.downPoint.subtract(event.point)
+    view.scrollBy(delta)
+};

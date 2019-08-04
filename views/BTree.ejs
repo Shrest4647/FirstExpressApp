@@ -13,23 +13,23 @@
 
 <% include partials/header %>
     <h1>BTree</h1>
-    <div class margin-bottom = 30px>
-        <form action="">
+    <div class="container" id ="instruction" margin-bottom = 30px>
+        <form id ="degree">
                 <p><span>Degree of BTree</span></p>
-                <input type="radio" name="degree" id="defaultdegree" value = '2'><strong>2</strong><br>
-                <input type="radio" name="degree" id="3degree" value = '3'><strong>3</strong><br>
-                <input type="radio" name="degree" id="4degree"  value = '4'><strong>4</strong><br>
+                <input type="radio" name="degree" id="defaultdegree">2  
+                <input type="radio" name="degree" id="nondefaultdegree">3 <br>
         </form>
         
         <p><span>Insert into Btree</span></p>
         <input type="number" id="textInsert">
         <p><span>Remove from Btree</span></p>
         <input type="number" id="textRemove">
-        <p><span>Search</span></p>
+        <p><span>Search Element</span></p>
         <input type="number" id="textSearch">
+        <hr>
             
     </div>
-    <div><canvas id='myCanvas' resize ></canvas></div>
+    <div class = "container-fluid"><canvas id='myCanvas' resize ></canvas></div>
 
    
     <script type = "text/javascript" src="paper-full.js"></script>
