@@ -6,36 +6,55 @@ function  BTreeNode(t,leaf){
         this.n = 0;
         this.pos= new Point(view.center.x,50);
 
-
-        this.draw = function(childPos,depth){
-            //Finding center of screen
+        this.setPosition = function(pos,depth){
             var c=1;
-            var center = this.pos-new Point(this.n*10,0);
-            if(depth>2){
-                c++;
+            if(depth==1){
+                pos*=1.25;
+    
             }
-            center+= new Point(childPos*8*(this.t)*20,depth*50);
-            console.log(center);
-            var BTnode = new Path.Rectangle(center,[(this.n)*20,30]);
+            // else if(depth==2){
+            //     c=2.75/this.t;
+            // }
+            // else if(depth==3){
+            //     c=2.5/this.t;
+            // }
+            this.pos= new Point(view.center.x,50)-new Point(this.n*10,0);
+            this.pos+= new Point(pos*4*(this.t)*30*c,depth*60);
+        }
+
+
+        this.draw = function(){
+            //Finding center of screen
+            var center = this.pos;            
+            if(center.x<0){center.x=0};
+            var BTnode = new Path.Rectangle(center,[(this.n)*35,30]);
             BTnode.strokeColor= "black";
             for(var i=0;i<this.n&&this.keys[i]!=undefined;i++){
-                var textPos =new Point(i*20/c,20)+center;
+                var textPos =new Point(i*30+10,15)+center;
+                if(textPos.x<0){
+                    textPos.x=20;
+                }
                 var text = new PointText(textPos);
                 text.content = this.keys[i];
-                console.log("printed ",text.content,"at",new Point(i*20,20)+center,"pos,depth",childPos,depth);
-                text.fillColor = "red";
+                // console.log("printed ",text.content,"at",new Point(i*20,20)+center);
+                text.fillColor = "blue";
                 if(!this.leaf){
-                    var start = textPos +new Point(10,20);
-                    var end = start+new Point(0,50);
+                    var start = textPos +new Point(-10,0);
+                    var end = this.C[i].pos+[this.C[i].n*5,0];
+                    console.log("child:",end);
                     var path = new Path(start,end);
-                    var arrow = new Path(end-[-10,10],end,end-[10,10]);
-                    // path.strokeColor = 'black';
-                    arrow.closed = true;
+                    // var arrow = new Path(end-[-10,10],end,end-[10,10]);
+                    path.strokeColor = 'black';
+                    // arrow.closed = true;
                     // arrow.strokeColor = 'black';
+                    if(i==this.n-1){
+                        var path2= new Path(start+[30,0],this.C[i+1].pos+[this.C[i].n*5,0]);
+                        path2.strokeColor = 'black';
+
+                    }
 
                 }
             }
-            console.log("\n");
         }
 
     this.traverse= function(){
@@ -508,32 +527,58 @@ function BTree(t){
 };
 //End of Btree
 
-t= new BTree(3); // A B-Tree with minium degree 3 
-console.log(t);
+
+document.querySelector('input#defaultdegree').click();
+var form = document.querySelectorAll('form');
+console.log(form);
+var choice = form.value;
+console.log(choice);
+
+
+
+t= new BTree(2); // A B-Tree with minium degree 3 
+// console.log(t);
+posArray = [];
 function reload(){
     project.activeLayer.removeChildren();
+    posArray=[];
     if(t.root!=null){
-        Draw(t.root,0.00,0);
+        managePos(t.root,0.00,0);
+        Draw(t.root);
     }
+}
+var lastpos;
+function managePos(tree,pos,d){
+    var Depth = d;
+    if(posArray.includes([pos,d]||lastpos==pos)){
+        console.log("position repeated");        
+    }
+    // console.log("Beforetree",tree.pos);
+    tree.setPosition(pos,d);
+    // console.log("Aftertree",tree.pos);
+    if(!tree.leaf){
+        for(var i=0;i<=tree.n;i++){
+            // if(pos<0){
+            //     pos*=1.1;
+            // }
+            // else{
+            //     pos*=1.1;
+
+            // }
+            managePos(tree.C[i],pos+(i-tree.n/2)/Math.pow(2,Depth),Depth+1);
+        }
+    }
+
 }
 
 
-
-function Draw(tree,pos,d){
-      // tree.draw(new Point(n*30+(c-2)*30+100,n*20));
-    if(pos==undefined){
-        pos=0.00;
-    }
-    if(d==undefined){
-        d=0;
-    }
-    var Depth = d;
-    tree.draw(pos,Depth);
-
+function Draw(tree){
+    tree.draw();
     if(!tree.leaf){
         for(var i=0;i<=tree.n;i++){
-            Draw(tree.C[i],pos+(i-tree.n.toFixed(4)/2)/Math.pow(2,Depth+1),Depth+1);
-                console.log(pos+(i-tree.n.toFixed(4)/2)/Math.pow(2,Depth+1));         
+            // posArray.push([pos,Depth]);            
+            Draw(tree.C[i]);
+                // console.log(pos+(i-tree.n.toFixed(4)/2)/Math.pow(2,Depth+1));         
 
         }
     }
@@ -542,9 +587,10 @@ function Draw(tree,pos,d){
         console.log("Found Rock Bottom");
         }
 }
-
+console.log(document.querySelector('input#defaultdegree').click());
 var inp = document.querySelector('input#textInsert');
 var rem = document.querySelector('input#textRemove');
+var search = document.querySelector('input#textSearch');
 inp.addEventListener("keypress",function(event){
 
     if(event.keyCode == 13){
@@ -562,6 +608,26 @@ rem.addEventListener("keypress",function(event){
         t.remove(parseInt(rem.value));
         rem.value = "";
         reload();
+
+    }
+
+});
+search.addEventListener("keypress",function(event){
+
+    if(event.keyCode == 13){
+        if(t.search(parseInt(search.value))){
+            setInterval(function(){
+                console.log(view);
+                clearInterval();
+
+            },2000)
+        }
+        else{
+            alert(search.value, "is not present");
+        }
+        // SearchFun(parseInt(search.value));
+        search.value = '';
+        // reload();
 
     }
 
