@@ -317,3 +317,14 @@ function reload(){
         }
         
     });
+
+    
+var toolPan = new Tool()
+toolPan.activate()
+
+// On drag, scroll the View by the difference between mousedown 
+// and mouseup
+toolPan.onMouseDrag = function (event) {
+    var delta = event.downPoint.subtract(event.point)
+    view.scrollBy(delta)
+};
