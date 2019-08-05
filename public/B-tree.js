@@ -519,16 +519,19 @@ function BTree(t){
 };
 //End of Btree
 var degree= prompt("Enter the degree(2,3):");
+console.log("prompt",degree);
 var d =document.querySelector('input#defaultdegree');
 if(degree==2){
     d.click();
-    console.log(1);
+    
 }
 else{
     document.querySelector('input#nondefaultdegree').click();
-    console.log(2);
 }
 
+// d.nextSibling.addEventListener('click',function(){
+//     console.log("pressed");
+// })
 
 
 
@@ -564,7 +567,7 @@ function managePos(tree,pos,d){
                 // console.log(pos);
 
             }
-            managePos(tree.C[i],pos+(i-tree.n/2)/Math.pow(2,Depth),Depth+1);
+            managePos(tree.C[i],pos+(i-tree.n/2)/Math.pow(1.8,Depth),Depth+1);
         }
     }
 
