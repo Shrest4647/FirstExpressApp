@@ -19,7 +19,7 @@
   "homepage": "https://github.com/Shrest4647/FirstExpressApp#readme",
   "dependencies": {
     "ejs": "^2.6.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "mongodb": "^3.2.7"
   }
 }
